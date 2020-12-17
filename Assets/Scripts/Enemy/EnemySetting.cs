@@ -11,7 +11,7 @@ public class EnemySetting : MonoBehaviour
     private GameObject player;
     public GameObject bullet;
     private Enemy enemy;
-    [SerializeField] private int currentHealth;
+    public int currentHealth;
 
     void Start()
     {
@@ -26,6 +26,10 @@ public class EnemySetting : MonoBehaviour
         enemy.ShootTarget();
         DestoryTank();
     }
+    void OnDrawGizmos()
+	{
+		enemy?.DrawCircle(this.GetComponent<Collider2D>().bounds.center, property.ViewRange, Color.red);
+	}
     void OnCollisionEnter2D(Collision2D bul)
     {
         if (bul.gameObject.tag == "Bullet")

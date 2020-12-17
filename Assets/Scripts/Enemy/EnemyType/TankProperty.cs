@@ -5,14 +5,28 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "TankType", menuName = "Create Type")]
 public class TankProperty : ScriptableObject
 {
-    public string Name;
+    [Header("About")]
     public int Id;
+    public TankTypes types;
+    public string Name;
+    [Header("Weaponry")]
     public int attack;
+    public float BulletSpeed;
+    public float ReloadTime;
+    [Header("Armor")]
     public int health;
+    [Header("Mobility")]
     public float MoveSpeed;
     public float RotateSpeed;
     public float HeadRotSpeed;
-    public float ShootSpeed;
-    public float ReloadTime;
+    [Header("Investigation")]
     public int ViewRange;
+}
+
+public enum TankTypes
+{
+    LightTank,
+    NormalTank,
+    HeavyTank
+
 }

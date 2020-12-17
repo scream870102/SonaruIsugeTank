@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9b0398de3b465948a3f302717554956, type: 3}
   m_Name: LightTank
   m_EditorClassIdentifier: 
-  Name: Light
   Id: 3
+  types: 0
+  Name: AMX 13 90
   attack: 5
-  health: 120
+  health: 100
   MoveSpeed: 7
   RotateSpeed: 150
   HeadRotSpeed: 4
-  ShootSpeed: 15
+  BulletSpeed: 15
   ReloadTime: 1
-  ViewRange: 15
+  ViewRange: 12
