@@ -16,10 +16,11 @@ MonoBehaviour:
   types: 2
   Name: Tiger II
   attack: 25
+  BulletSpeed: 15
+  ReloadTime: 4
   health: 200
   MoveSpeed: 3
   RotateSpeed: 100
   HeadRotSpeed: 0.5
-  BulletSpeed: 15
-  ReloadTime: 4
-  ViewRange: 5
+  AttackRange: 8
+  ViewRange: 15

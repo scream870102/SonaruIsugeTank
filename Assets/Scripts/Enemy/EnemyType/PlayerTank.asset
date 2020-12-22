@@ -16,10 +16,11 @@ MonoBehaviour:
   types: 1
   Name: Player
   attack: 20
+  BulletSpeed: 15
+  ReloadTime: 2
   health: 200
   MoveSpeed: 4
   RotateSpeed: 120
   HeadRotSpeed: 2
-  BulletSpeed: 15
-  ReloadTime: 2
-  ViewRange: 10
+  AttackRange: 15
+  ViewRange: 20

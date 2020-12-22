@@ -5,18 +5,17 @@ using UnityEngine.UI;
 
 public class EnemyHpText : MonoBehaviour
 {
-    public Text EnemyName;
-    public Image EnemyBar;
+    [SerializeField]Text enemyName=null;
+    [SerializeField] Image enemyBar=null;
+    EnemyHpBar enemyHPBar = null;
 
     // Start is called before the first frame update
     void Start()
     {
-        EnemyName.text = "";
+        enemyName.text = "";
+        enemyHPBar = enemyBar.GetComponent<EnemyHpBar>();
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        EnemyName.text = EnemyBar.GetComponent<EnemyHpBar>().EnemyName;
-    }
+    void Update() => enemyName.text =enemyHPBar.EnemyName;
 }

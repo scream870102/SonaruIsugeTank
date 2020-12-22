@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 5779800703950537825}
   - component: {fileID: 5779800703950537824}
   - component: {fileID: 5779800703950537827}
-  - component: {fileID: 7954362029061394183}
+  - component: {fileID: 5495503772820425240}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -163,7 +163,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &7954362029061394183
+--- !u!114 &5495503772820425240
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -172,14 +172,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5779800703950537831}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01efee04c04c4ba429d8e2aed6511eb5, type: 3}
+  m_Script: {fileID: 11500000, guid: c98a503e496f9384ca53422610a66943, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  head: {fileID: 5779800705140013339}
-  gun: {fileID: 5779800704600957751}
-  shootPoint: {fileID: 5779800703697011460}
+  EnemyHead: {fileID: 5779800705140013339}
+  EnemyGun: {fileID: 5779800704600957751}
+  EnemyShootPoint: {fileID: 5779800703697011460}
+  Bullet: {fileID: 6019355082826000455, guid: 86d74f62686efe7479f5b30a01b25c96, type: 3}
   property: {fileID: 0}
-  bullet: {fileID: 6019355082826000455, guid: 86d74f62686efe7479f5b30a01b25c96, type: 3}
+  player: {fileID: 0}
   currentHealth: 0
 --- !u!1 &5779800704600957750
 GameObject:

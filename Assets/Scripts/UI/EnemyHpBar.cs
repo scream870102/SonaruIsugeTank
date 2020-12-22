@@ -26,11 +26,11 @@ public class EnemyHpBar : MonoBehaviour
         {
             countTime = 5f;
             ImgAlpha = true;
-            currentHealth = Enemy.GetComponent<EnemySetting>().currentHealth;
-            health = Enemy.GetComponent<EnemySetting>().property.health;
+            currentHealth = Enemy.GetComponent<EnemyTank>().currentHealth;
+            health = Enemy.GetComponent<EnemyTank>().property.health;
             healthPercent = currentHealth / health;
             EnemyHpImg.fillAmount = healthPercent;
-            EnemyName = Enemy.GetComponent<EnemySetting>().property.Name;
+            EnemyName = Enemy.GetComponent<EnemyTank>().property.Name;
             Enemy = null;
         }
         else 

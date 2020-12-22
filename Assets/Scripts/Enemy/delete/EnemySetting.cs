@@ -28,7 +28,8 @@ public class EnemySetting : MonoBehaviour
     }
     void OnDrawGizmos()
 	{
-		enemy?.DrawCircle(this.GetComponent<Collider2D>().bounds.center, property.ViewRange, Color.red);
+		enemy?.DrawCircle(shootPoint.position, property.AttackRange, Color.red);
+        enemy?.DrawCircle(head.transform.position, property.ViewRange, Color.green);
 	}
     void OnCollisionEnter2D(Collision2D bul)
     {

@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: 3
   types: 0
-  Name: AMX 13 90
+  Name: T92
   attack: 5
+  BulletSpeed: 15
+  ReloadTime: 1
   health: 100
   MoveSpeed: 7
   RotateSpeed: 150
   HeadRotSpeed: 4
-  BulletSpeed: 15
-  ReloadTime: 1
-  ViewRange: 12
+  AttackRange: 15
+  ViewRange: 18

@@ -16,10 +16,11 @@ MonoBehaviour:
   types: 1
   Name: T-34-85
   attack: 15
+  BulletSpeed: 15
+  ReloadTime: 2
   health: 150
   MoveSpeed: 4
   RotateSpeed: 120
   HeadRotSpeed: 2
-  BulletSpeed: 15
-  ReloadTime: 2
-  ViewRange: 8
+  AttackRange: 12
+  ViewRange: 15

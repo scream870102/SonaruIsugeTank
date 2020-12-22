@@ -20,6 +20,7 @@ public class TankProperty : ScriptableObject
     public float RotateSpeed;
     public float HeadRotSpeed;
     [Header("Investigation")]
+    public int AttackRange;
     public int ViewRange;
 }
 

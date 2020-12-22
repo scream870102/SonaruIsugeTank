@@ -10,10 +10,8 @@ public class Bullet : MonoBehaviour
     public int id;
     public GameObject bar;
 
-    void Awake()
-    {
-        bar = FindObjectOfType<EnemyHpBar>().gameObject;
-    }
+    void Awake() => bar = FindObjectOfType<EnemyHpBar>().gameObject;
+    
     // Update is called once per frame
     void Update()
     {
@@ -29,12 +27,10 @@ public class Bullet : MonoBehaviour
         Destroy(this.gameObject);
     }
     
-    private GameObject obj;
     public GameObject Get_Enemy_GameObject(Collision2D col){
-        obj = col.gameObject;
-        if(obj.CompareTag("Enemy")){
-            return obj;
+        if(col.gameObject.CompareTag("Enemy")){
+            return col.gameObject;
         }
-        else return null;
+        return null;
     }
 }

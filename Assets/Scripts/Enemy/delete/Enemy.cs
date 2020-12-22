@@ -12,7 +12,7 @@ public class Enemy
     private GameObject BulletClone;
     public TankProperty property;
     public GameObject player;
-    private float countTime = 0;
+    private float CountTime = 0;
     public Enemy(GameObject _head, Transform _gun, Transform _point, TankProperty _property, GameObject _player, GameObject _bullet)
     {
         EnemyHead = _head;
@@ -24,7 +24,7 @@ public class Enemy
     }
     public void LookTarget()
     {
-        if(player != null)
+        if(player != null && Vector2.Distance(player.transform.position, EnemyHead.transform.position) <= property.ViewRange)
         {
             Vector3 targetPos = player.transform.position;
             Vector3 direction = targetPos - EnemyHead.transform.position;
@@ -36,18 +36,17 @@ public class Enemy
     }
     public void ShootTarget()
     {
-        countTime += Time.deltaTime;
+        CountTime += Time.deltaTime;
         Ray2D ray = new Ray2D(EnemyShootPoint.position, EnemyGun.up);
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, player.transform.position, property.ViewRange);
-        Debug.DrawLine(EnemyShootPoint.position, player.transform.position, Color.red);
+        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, property.AttackRange);
         if (hit.collider && hit.collider.name == "Player")
         {
-            if (countTime >= property.ReloadTime)
+            if (CountTime >= property.ReloadTime)
             {
                 EnemyBulletShoot(Bullet, property.BulletSpeed);
-                countTime = 0;
+                CountTime = 0;
             }
-            //Debug.DrawLine(ray.origin,hit.point, Color.red );
+            Debug.DrawLine(ray.origin,hit.point, Color.red );
         }
     }
 
