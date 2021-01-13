@@ -7,7 +7,7 @@ public class Bullet : MonoBehaviour
 {
     public float time;
     public int attack;
-    public int id;
+    public int Team;
     public GameObject bar;
 
     void Awake() => bar = FindObjectOfType<EnemyHpBar>().gameObject;
@@ -28,7 +28,7 @@ public class Bullet : MonoBehaviour
     }
     
     public GameObject Get_Enemy_GameObject(Collision2D col){
-        if(col.gameObject.CompareTag("Enemy")){
+        if(col.gameObject.CompareTag("Enemy") && Team != 0){
             return col.gameObject;
         }
         return null;

@@ -4,26 +4,26 @@ using UnityEngine;
 
 public class AwareState : State
 {
-    public static AwareState Instance {get; private set;}
-    static AwareState()
-    {
-        Instance = new AwareState();
-        Debug.Log("new AwareState");
-    }
+    // public static AwareState Instance {get; private set;}
+    // static AwareState()
+    // {
+    //     Instance = new AwareState();
+    //     Debug.Log("new AwareState");
+    // }
     public override void Stay(EnemyTank enemy)
     {        
         enemy.LookTarget();
         if(enemy.currentHealth <= 0)
         {
-            enemy.ChangeState(new DieState());
+            enemy.ChangeState(EnemyState.Die);
         }
         if(enemy.DistanceToPalyer() <= enemy.property.AttackRange)
         {
-            enemy.ChangeState(new AttackState());
+            enemy.ChangeState(EnemyState.Attack);
         }
         if(enemy.DistanceToPalyer() > enemy.property.ViewRange)
         {
-            enemy.ChangeState(new PatrolState());
+            enemy.ChangeState(EnemyState.Patrol);
         }
     }
 }

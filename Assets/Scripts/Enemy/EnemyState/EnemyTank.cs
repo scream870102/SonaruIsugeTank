@@ -1,7 +1,16 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CircleCal.Math;
+using Eccentric.Utils;
+
+public enum EnemyState 
+{
+    Patrol,
+    Aware,
+    Attack,
+    Die
+}
 
 public class EnemyTank : MonoBehaviour
 {
@@ -17,13 +26,26 @@ public class EnemyTank : MonoBehaviour
     public GameObject player;
     private float CountTime = 0;
     public int currentHealth;
+    public int Team = 0;
+    public Dictionary<EnemyState, State> StateDic;
 
     // Start is called before the first frame update
     void Awake()
-    {
-        CurrentState = new PatrolState();
+    {   
+        StateDic =new Dictionary<EnemyState, State>()
+        {
+            {EnemyState.Patrol, new PatrolState()},
+            {EnemyState.Aware, new AwareState()},
+            {EnemyState.Attack, new AttackState()},
+            {EnemyState.Die, new DieState()}
+        };     
         currentHealth = property.health;
-        player = FindObjectOfType<PlayerSetting>().gameObject;
+        player = FindObjectOfType<Player>().gameObject;
+    }
+
+    void Start() 
+    {
+        CurrentState = StateDic[EnemyState.Patrol];
     }
 
     // Update is called once per frame
@@ -31,12 +53,13 @@ public class EnemyTank : MonoBehaviour
     {
         CurrentState.Stay(this);
         //Debug.Log(CurrentState);
+        CountTime += Time.deltaTime;
     }
 
     //設定扣血
     void OnCollisionEnter2D(Collision2D bul)
     {
-        if (bul.gameObject.tag == "Bullet")
+        if (bul.gameObject.tag == "Bullet" && Team != bul.gameObject.GetComponent<Bullet>().Team)
         {
             currentHealth -= bul.gameObject.GetComponent<Bullet>().attack;
         }
@@ -45,25 +68,24 @@ public class EnemyTank : MonoBehaviour
     //偵錯用(畫圓)
     void OnDrawGizmos()
 	{
-		DrawCircle(EnemyHead.transform.position, property.AttackRange, Color.red);
-        DrawCircle(EnemyHead.transform.position, property.ViewRange, Color.green);
+		DrawCircle(EnemyHead.transform.position, property.AttackRange, Color.red);  //攻擊圈(紅)
+        DrawCircle(EnemyHead.transform.position, property.ViewRange, Color.green);  //偵查圈(綠)
 	}
 
     //改變狀態
-    public void ChangeState(State newState)
+    public void ChangeState(EnemyState newState)
     {
-        CurrentState = newState;
+        CurrentState = StateDic[newState];
     }
 
     //計算與玩家間的距離
     public float DistanceToPalyer()
     {
-        return Vector2.Distance(player.transform.position, EnemyHead.transform.position);
-    }
-
-    public void RandomMove()
-    {
-            
+        if(player != null)
+        {
+            return Vector2.Distance(player.transform.position, EnemyHead.transform.position);
+        }
+        return Mathf.Infinity;
     }
 
     //敵人瞄準玩家
@@ -83,7 +105,6 @@ public class EnemyTank : MonoBehaviour
     //敵人射擊
     public void ShootTarget()
     {
-        CountTime += Time.deltaTime;
         Ray2D ray = new Ray2D(EnemyShootPoint.position, EnemyGun.up);
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit.collider && hit.collider.name == "Player")
@@ -106,7 +127,7 @@ public class EnemyTank : MonoBehaviour
         BulletClone.GetComponent<SpriteRenderer>().color = new Color(0.16f, 0.62f, 0.9f);
         BulletClone.GetComponent<Rigidbody2D>().velocity = EnemyGun.up * speed;
         BulletClone.GetComponent<Bullet>().attack = property.attack;
-        BulletClone.GetComponent<Bullet>().id = property.Id;
+        BulletClone.GetComponent<Bullet>().Team = Team;
     }
 
     //消滅

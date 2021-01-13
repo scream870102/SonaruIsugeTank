@@ -13,8 +13,8 @@ public class HPbar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerHealth = player.GetComponent<PlayerSetting>().property.health;
-        currentHealth = player.GetComponent<PlayerSetting>().currentHealth;
+        playerHealth = player.GetComponent<Player>().property.health;
+        currentHealth = player.GetComponent<Player>().currentHealth;
         HPpercent = currentHealth / playerHealth;
         HpBarImg.color = Color.Lerp (Color.red, Color.green, HPpercent);
         
@@ -25,7 +25,7 @@ public class HPbar : MonoBehaviour
     {
         if(player != null)
         {
-            currentHealth = player.GetComponent<PlayerSetting>().currentHealth;
+            currentHealth = player.GetComponent<Player>().currentHealth;
             HPpercent = currentHealth / playerHealth;
             HpBarImg.fillAmount = Mathf.Lerp(0.25f, 1, HPpercent);
             HpBarImg.color = Color.Lerp(Color.red, Color.green, HPpercent);

@@ -11,7 +11,7 @@ public class HPText : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentHealth = player.GetComponent<PlayerSetting>().currentHealth;
+        currentHealth = player.GetComponent<Player>().currentHealth;
         HpText.text = currentHealth.ToString();
     }
 
@@ -20,7 +20,7 @@ public class HPText : MonoBehaviour
     {
         if(player != null)
         {
-            currentHealth = player.GetComponent<PlayerSetting>().currentHealth;
+            currentHealth = player.GetComponent<Player>().currentHealth;
             if(currentHealth <= 0)
             {
                 HpText.text = "0";
