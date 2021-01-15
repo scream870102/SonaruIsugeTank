@@ -24,9 +24,13 @@ public class EnemyTank : MonoBehaviour
     private GameObject BulletClone;
     public TankProperty property;
     public GameObject player;
-    private float CountTime = 0;
+    private ScaledTimer reloadTimer;
     public int currentHealth;
     public int Team = 0;
+
+    private ScaledTimer randomMoveTimer;
+    private int[] randomMove = new int[2];
+
     public Dictionary<EnemyState, State> StateDic;
 
     // Start is called before the first frame update
@@ -46,6 +50,8 @@ public class EnemyTank : MonoBehaviour
     void Start() 
     {
         CurrentState = StateDic[EnemyState.Patrol];
+        reloadTimer = new ScaledTimer(property.ReloadTime, false);
+        randomMoveTimer = new ScaledTimer(1, false);
     }
 
     // Update is called once per frame
@@ -53,7 +59,6 @@ public class EnemyTank : MonoBehaviour
     {
         CurrentState.Stay(this);
         //Debug.Log(CurrentState);
-        CountTime += Time.deltaTime;
     }
 
     //設定扣血
@@ -88,12 +93,29 @@ public class EnemyTank : MonoBehaviour
         return Mathf.Infinity;
     }
 
-    //敵人瞄準玩家
-    public void LookTarget()
+    //敵人隨機移動
+    public void RandomMove()
     {
-        if(player != null)
+        
+        if(randomMoveTimer.IsFinished)
         {
-            Vector3 targetPos = player.transform.position;
+            randomMove[0] = Random.Range(0, 2);
+            randomMove[1] = Random.Range(-1, 2);
+            randomMoveTimer.Reset();
+        }
+        else
+        {
+            transform.Translate(randomMove[0] * Vector3.up * property.MoveSpeed * Time.deltaTime);
+            transform.Rotate(0, 0, randomMove[1] * property.RotateSpeed * Time.deltaTime);
+        }
+    }
+
+    //敵人瞄準玩家
+    public void LookTarget(GameObject target)
+    {
+        if(target != null)
+        {
+            Vector3 targetPos = target.transform.position;
             Vector3 direction = targetPos - EnemyHead.transform.position;
             direction.z = 0f;
             direction.Normalize();
@@ -109,10 +131,10 @@ public class EnemyTank : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
         if (hit.collider && hit.collider.name == "Player")
         {
-            if (CountTime >= property.ReloadTime)
+            if (reloadTimer.IsFinished)
             {
                 EnemyBulletShoot(Bullet, property.BulletSpeed);
-                CountTime = 0;
+                reloadTimer.Reset();
             }
             Debug.DrawLine(ray.origin,hit.point, Color.red );
         }

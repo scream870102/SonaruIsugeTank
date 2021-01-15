@@ -12,6 +12,7 @@ public class PatrolState : State
     // }
     public override void Stay(EnemyTank enemy)
     {
+        enemy.RandomMove();
         if(enemy.currentHealth <= 0)
         {
             enemy.ChangeState(EnemyState.Die);

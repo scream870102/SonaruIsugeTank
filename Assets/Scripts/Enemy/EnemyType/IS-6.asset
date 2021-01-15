@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9b0398de3b465948a3f302717554956, type: 3}
-  m_Name: LightTank
+  m_Name: IS-6
   m_EditorClassIdentifier: 
-  Id: 3
-  types: 0
-  Name: T92
-  attack: 5
+  Id: 2
+  types: 2
+  Name: IS-6
+  attack: 25
   BulletSpeed: 15
-  ReloadTime: 1
-  health: 100
-  MoveSpeed: 7
-  RotateSpeed: 150
-  HeadRotSpeed: 4
-  AttackRange: 15
-  ViewRange: 18
+  ReloadTime: 4
+  health: 200
+  MoveSpeed: 3
+  RotateSpeed: 100
+  HeadRotSpeed: 0.5
+  AttackRange: 8
+  ViewRange: 15

@@ -12,7 +12,7 @@ public class AttackState : State
     // }
     public override void Stay(EnemyTank enemy)
     {
-        enemy.LookTarget();
+        enemy.LookTarget(enemy.player);
         enemy.ShootTarget();
         if(enemy.currentHealth <= 0)
         {

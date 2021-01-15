@@ -12,7 +12,7 @@ public class AwareState : State
     // }
     public override void Stay(EnemyTank enemy)
     {        
-        enemy.LookTarget();
+        enemy.LookTarget(enemy.player);
         if(enemy.currentHealth <= 0)
         {
             enemy.ChangeState(EnemyState.Die);
