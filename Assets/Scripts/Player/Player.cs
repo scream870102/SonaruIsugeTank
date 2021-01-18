@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Lean.Pool;
 
 public class Player : MonoBehaviour
 {
@@ -91,7 +92,7 @@ public class Player : MonoBehaviour
     {
         Vector3 pos = ShootPoint.transform.position;
         Quaternion rot = ShootPoint.transform.rotation;
-        BulletClone = GameObject.Instantiate(Bullet, pos, rot);
+        BulletClone = LeanPool.Spawn(Bullet, pos, rot);
         BulletClone.GetComponent<SpriteRenderer>().color = new Color(0.17f, 0.7f, 0.32f);
         BulletClone.GetComponent<Rigidbody2D>().velocity = Gun.up * property.BulletSpeed;//給予砲彈初速
         BulletClone.GetComponent<Bullet>().attack = property.attack;        

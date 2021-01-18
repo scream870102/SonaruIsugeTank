@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 5779800704600957751}
   - component: {fileID: 5779800704600957745}
   - component: {fileID: 4392185196488225187}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}

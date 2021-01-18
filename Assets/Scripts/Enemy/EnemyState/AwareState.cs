@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class AwareState : State
 {
-    // public static AwareState Instance {get; private set;}
-    // static AwareState()
-    // {
-    //     Instance = new AwareState();
-    //     Debug.Log("new AwareState");
-    // }
+    public override void Enter(EnemyTank enemy)
+    {
+
+    }
     public override void Stay(EnemyTank enemy)
     {        
         enemy.LookTarget(enemy.player);
@@ -25,5 +23,9 @@ public class AwareState : State
         {
             enemy.ChangeState(EnemyState.Patrol);
         }
+    }
+    public override void Exit(EnemyTank enemy)
+    {
+        
     }
 }

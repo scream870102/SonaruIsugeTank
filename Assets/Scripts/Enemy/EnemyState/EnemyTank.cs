@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CircleCal.Math;
 using Eccentric.Utils;
+using Lean.Pool;
 
 public enum EnemyState 
 {
@@ -29,11 +30,14 @@ public class EnemyTank : MonoBehaviour
     public int Team = 0;
 
     private ScaledTimer randomMoveTimer;
-    private int[] randomMove = new int[2];
+    private int[] randomMove;
 
+    public Transform[] PatrolBezierPoint;
+    public int segmentNum;
+    private int currentPoint;
     public Dictionary<EnemyState, State> StateDic;
 
-    // Start is called before the first frame update
+    
     void Awake()
     {   
         StateDic =new Dictionary<EnemyState, State>()
@@ -80,7 +84,9 @@ public class EnemyTank : MonoBehaviour
     //改變狀態
     public void ChangeState(EnemyState newState)
     {
+        CurrentState.Exit(this);
         CurrentState = StateDic[newState];
+        CurrentState.Enter(this);
     }
 
     //計算與玩家間的距離
@@ -95,22 +101,22 @@ public class EnemyTank : MonoBehaviour
 
     //敵人隨機移動
     public void RandomMove()
-    {
-        
-        if(randomMoveTimer.IsFinished)
-        {
-            randomMove[0] = Random.Range(0, 2);
-            randomMove[1] = Random.Range(-1, 2);
-            randomMoveTimer.Reset();
-        }
-        else
-        {
-            transform.Translate(randomMove[0] * Vector3.up * property.MoveSpeed * Time.deltaTime);
-            transform.Rotate(0, 0, randomMove[1] * property.RotateSpeed * Time.deltaTime);
-        }
+    {    
+        // if(randomMoveTimer.IsFinished)
+        // {
+        //     randomMove[0] = Random.Range(0, 2);
+        //     randomMove[1] = Random.Range(-1, 2);
+        //     randomMoveTimer.Reset();
+        // }
+        // else
+        // {
+        //     transform.Translate(randomMove[0] * Vector3.up * property.MoveSpeed * Time.deltaTime);
+        //     transform.Rotate(0, 0, randomMove[1] * property.RotateSpeed * Time.deltaTime);
+        // }
+
     }
 
-    //敵人瞄準玩家
+    //敵人瞄準目標
     public void LookTarget(GameObject target)
     {
         if(target != null)
@@ -129,7 +135,7 @@ public class EnemyTank : MonoBehaviour
     {
         Ray2D ray = new Ray2D(EnemyShootPoint.position, EnemyGun.up);
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-        if (hit.collider && hit.collider.name == "Player")
+        if (hit.collider && hit.collider.tag == "Player")
         {
             if (reloadTimer.IsFinished)
             {
@@ -145,7 +151,7 @@ public class EnemyTank : MonoBehaviour
     {
         Vector3 pos = EnemyShootPoint.position;
         Quaternion rot = EnemyShootPoint.rotation;
-        BulletClone = GameObject.Instantiate(bullet, pos, rot);
+        BulletClone = LeanPool.Spawn(bullet, pos, rot);
         BulletClone.GetComponent<SpriteRenderer>().color = new Color(0.16f, 0.62f, 0.9f);
         BulletClone.GetComponent<Rigidbody2D>().velocity = EnemyGun.up * speed;
         BulletClone.GetComponent<Bullet>().attack = property.attack;
@@ -169,7 +175,7 @@ public class EnemyTank : MonoBehaviour
         float delta = (2f * Mathf.PI) / count;
         Vector2 prev = circle.Eval(0);
 
-        Color tempColor = Gizmos.color;
+        //Color tempColor = Gizmos.color;
 		Gizmos.color = _color;
 
         for(int i = 0; i <= count; i++)
@@ -179,6 +185,14 @@ public class EnemyTank : MonoBehaviour
             prev = curr;
         }
 
-        Gizmos.color = tempColor;
+        //Gizmos.color = tempColor;
+    }
+
+    //計算貝茲曲線(巡邏狀態)
+    Vector3 CalBezier(float t, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
+    {
+        float u = 1 - t;
+        Vector3 res = (u * u * u * p0) + (3 * t * u * u * p1) + (3 * t * t * u * p2) + (t * t * t * p3);
+        return res;
     }
 }

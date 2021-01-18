@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class AttackState : State
 {
-    // public static AttackState Instance {get; private set;}
-    // static AttackState()
-    // {
-    //     Instance = new AttackState();
-    //     Debug.Log("new AttackState!");
-    // }
+    public override void Enter(EnemyTank enemy)
+    {
+
+    }
     public override void Stay(EnemyTank enemy)
     {
         enemy.LookTarget(enemy.player);
@@ -22,5 +20,9 @@ public class AttackState : State
         {
             enemy.ChangeState(EnemyState.Aware);
         }
+    }
+    public override void Exit(EnemyTank enemy)
+    {
+        
     }
 }

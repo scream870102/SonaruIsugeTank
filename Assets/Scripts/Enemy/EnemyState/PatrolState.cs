@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class PatrolState : State
 {
-    // public static PatrolState Instance {get; private set;}
-    // static PatrolState()
-    // {
-    //     Instance = new PatrolState();
-    //     Debug.Log("new PatrolState");
-    // }
+    public override void Enter(EnemyTank enemy)
+    {
+
+    }
     public override void Stay(EnemyTank enemy)
     {
         enemy.RandomMove();
+        //enemy.LookTarget(enemy.gameObject);
         if(enemy.currentHealth <= 0)
         {
             enemy.ChangeState(EnemyState.Die);
@@ -21,5 +20,9 @@ public class PatrolState : State
         {
             enemy.ChangeState(EnemyState.Aware);
         }
+    }
+    public override void Exit(EnemyTank enemy)
+    {
+        
     }
 }
