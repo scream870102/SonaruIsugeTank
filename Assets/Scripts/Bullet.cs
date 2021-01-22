@@ -40,7 +40,7 @@ public class Bullet : MonoBehaviour
         {
             LeanPool.Despawn(gameObject);
         }
-        Debug.Log("Collision2D Name: " + col.gameObject.name.ToString() + " Frame: " + Time.frameCount);
+        //Debug.Log("Collision2D Name: " + col.gameObject.name.ToString() + " Frame: " + Time.frameCount);
     }
     
     public GameObject Get_Enemy_GameObject(Collision2D col){

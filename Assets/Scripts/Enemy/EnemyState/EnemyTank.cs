@@ -28,13 +28,14 @@ public class EnemyTank : MonoBehaviour
     private ScaledTimer reloadTimer;
     public int currentHealth;
     public int Team = 0;
+    private Rigidbody2D enemyRb;
 
-    private ScaledTimer randomMoveTimer;
-    private int[] randomMove;
-
-    public Transform[] PatrolBezierPoint;
+    public GameObject PatrolCtrlObj;
+    public Transform[] BezierCtrlPt;
+    public Queue<Vector3> PatrolQueue;
     public int segmentNum;
-    private int currentPoint;
+    public Vector3 currentTarget;
+
     public Dictionary<EnemyState, State> StateDic;
 
     
@@ -49,13 +50,15 @@ public class EnemyTank : MonoBehaviour
         };     
         currentHealth = property.health;
         player = FindObjectOfType<Player>().gameObject;
+        enemyRb = GetComponent<Rigidbody2D>();
+        PatrolQueue = new Queue<Vector3>();
     }
 
     void Start() 
     {
         CurrentState = StateDic[EnemyState.Patrol];
+        CurrentState.Enter(this);
         reloadTimer = new ScaledTimer(property.ReloadTime, false);
-        randomMoveTimer = new ScaledTimer(1, false);
     }
 
     // Update is called once per frame
@@ -99,21 +102,32 @@ public class EnemyTank : MonoBehaviour
         return Mathf.Infinity;
     }
 
-    //敵人隨機移動
-    public void RandomMove()
+    //敵人巡邏模式移動
+    public void CurveMove()
     {    
-        // if(randomMoveTimer.IsFinished)
-        // {
-        //     randomMove[0] = Random.Range(0, 2);
-        //     randomMove[1] = Random.Range(-1, 2);
-        //     randomMoveTimer.Reset();
-        // }
-        // else
-        // {
-        //     transform.Translate(randomMove[0] * Vector3.up * property.MoveSpeed * Time.deltaTime);
-        //     transform.Rotate(0, 0, randomMove[1] * property.RotateSpeed * Time.deltaTime);
-        // }
-
+        
+        if(transform.position!=currentTarget)
+        {
+            Vector3 dir = currentTarget - transform.position;
+            dir.z = 0f;
+            dir.Normalize();
+            float angle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, -angle), property.RotateSpeed * Time.deltaTime);
+            if(transform.rotation == Quaternion.Euler(0, 0, -angle))
+            {
+                transform.position = Vector3.MoveTowards(transform.position, currentTarget, property.MoveSpeed * Time.deltaTime);
+            }
+        }
+        else
+        {
+            if(PatrolQueue.Count == 0)
+            {
+                //Find New Curve
+                
+                return;
+            }
+            currentTarget = PatrolQueue.Dequeue();
+        }
     }
 
     //敵人瞄準目標
@@ -126,7 +140,8 @@ public class EnemyTank : MonoBehaviour
             direction.z = 0f;
             direction.Normalize();
             float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
-            EnemyHead.transform.rotation = Quaternion.Slerp(EnemyHead.transform.rotation, Quaternion.Euler(0, 0, -angle), property.HeadRotSpeed * Time.deltaTime);
+            EnemyHead.transform.rotation = Quaternion.RotateTowards(EnemyHead.transform.rotation, Quaternion.Euler(0, 0, -angle), property.HeadRotSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, -angle), property.RotateSpeed * Time.deltaTime);
         }
     }
 
@@ -164,7 +179,28 @@ public class EnemyTank : MonoBehaviour
         Destroy(this.gameObject);
     }
 
+    //生成巡邏點
+    public void InitPatrolPoint(Vector3 start, Vector3 control1, Vector3 control2, Vector3 end)
+    {
+        if(PatrolQueue.Count == 0)
+        {
+            PatrolQueue = new Queue<Vector3>();
+            for(int i = 0; i < segmentNum; i++)
+            {
+                float t = i / (float)segmentNum;
+                PatrolQueue.Enqueue(CalBezier(t, start, control1, control2, end));
+            }
+            currentTarget = PatrolQueue.Dequeue();
+        }
+    }
 
+    //計算貝茲曲線(巡邏狀態)
+    public Vector3 CalBezier(float t, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
+    {
+        float u = 1 - t;
+        Vector3 res = (u * u * u * p0) + (3 * t * u * u * p1) + (3 * t * t * u * p2) + (t * t * t * p3);
+        return res;
+    }
 
     //偵錯用(畫攻擊範圍、視野範圍)
     [ExecuteInEditMode]
@@ -188,11 +224,4 @@ public class EnemyTank : MonoBehaviour
         //Gizmos.color = tempColor;
     }
 
-    //計算貝茲曲線(巡邏狀態)
-    Vector3 CalBezier(float t, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
-    {
-        float u = 1 - t;
-        Vector3 res = (u * u * u * p0) + (3 * t * u * u * p1) + (3 * t * t * u * p2) + (t * t * t * p3);
-        return res;
-    }
 }

@@ -59,11 +59,11 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Rotate(0, 0, property.RotateSpeed * Time.deltaTime);
+            transform.Rotate(Vector3.forward * Time.deltaTime * property.RotateSpeed);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(0, 0, -property.RotateSpeed * Time.deltaTime);
+            transform.Rotate(Vector3.forward * Time.deltaTime * -property.RotateSpeed);
         }
     }
 
@@ -74,7 +74,7 @@ public class Player : MonoBehaviour
         direction.z = 0f;
         direction.Normalize();
         float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
-        Head.transform.rotation = Quaternion.Slerp(Head.transform.rotation, Quaternion.Euler(0, 0, -angle), property.HeadRotSpeed * Time.deltaTime);
+        Head.transform.rotation = Quaternion.RotateTowards(Head.transform.rotation, Quaternion.Euler(0, 0, -angle), property.HeadRotSpeed * Time.deltaTime);
     }
     public void Shoot()
     {

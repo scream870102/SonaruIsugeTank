@@ -20,7 +20,7 @@ MonoBehaviour:
   ReloadTime: 4
   health: 200
   MoveSpeed: 3
-  RotateSpeed: 100
-  HeadRotSpeed: 0.5
-  AttackRange: 8
+  RotateSpeed: 27
+  HeadRotSpeed: 26
+  AttackRange: 12
   ViewRange: 15

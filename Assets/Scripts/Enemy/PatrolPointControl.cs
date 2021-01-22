@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Eccentric.Utils;
 
-public class test : MonoBehaviour
+public class PatrolPointControl : MonoBehaviour
 {
     public Transform StartPt;
     public Transform CtrlPt_1;
@@ -11,13 +10,9 @@ public class test : MonoBehaviour
     public Transform EndPt;
 
     public int segmentNum;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }    
-    
-    // Update is called once per frame
+
+
+
     void OnDrawGizmos() 
     {
         Gizmos.color = Color.blue;
@@ -26,11 +21,7 @@ public class test : MonoBehaviour
 
     void SetCurve()
     {
-        // for(int i = 0; i < 50; i++)
-        // {
-        //     float t = i / (float)segmentNum;
-        //     Gizmos.DrawSphere(CalBezier(t, ControlPoint[0].position, ControlPoint[1].position, ControlPoint[2].position, ControlPoint[3].position), 1);
-        // }
+        
         for(int j = 0; j < (segmentNum - 1); j++)
         {
             float ct = j / (float)segmentNum;
