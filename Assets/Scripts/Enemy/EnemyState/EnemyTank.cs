@@ -31,10 +31,12 @@ public class EnemyTank : MonoBehaviour
     private Rigidbody2D enemyRb;
 
     public GameObject PatrolCtrlObj;
+    public PatrolPointControl s_patrolCtrl;
     public Transform[] BezierCtrlPt;
     public Queue<Vector3> PatrolQueue;
     public int segmentNum;
     public Vector3 currentTarget;
+    private bool forward = true;
 
     public Dictionary<EnemyState, State> StateDic;
 
@@ -52,6 +54,7 @@ public class EnemyTank : MonoBehaviour
         player = FindObjectOfType<Player>().gameObject;
         enemyRb = GetComponent<Rigidbody2D>();
         PatrolQueue = new Queue<Vector3>();
+        s_patrolCtrl = PatrolCtrlObj.GetComponent<PatrolPointControl>();
     }
 
     void Start() 
@@ -105,7 +108,6 @@ public class EnemyTank : MonoBehaviour
     //敵人巡邏模式移動
     public void CurveMove()
     {    
-        
         if(transform.position!=currentTarget)
         {
             Vector3 dir = currentTarget - transform.position;
@@ -123,7 +125,14 @@ public class EnemyTank : MonoBehaviour
             if(PatrolQueue.Count == 0)
             {
                 //Find New Curve
-                
+                if(forward)
+                {
+                    InitPatrolPoint(transform.position, s_patrolCtrl.CtrlPt_1.position, s_patrolCtrl.CtrlPt_2.position, s_patrolCtrl.EndPt.position);
+                    forward = !forward;
+                    return;
+                }
+                InitPatrolPoint(transform.position, s_patrolCtrl.CtrlPt_2.position, s_patrolCtrl.CtrlPt_1.position, s_patrolCtrl.StartPt.position);
+                forward = !forward;
                 return;
             }
             currentTarget = PatrolQueue.Dequeue();

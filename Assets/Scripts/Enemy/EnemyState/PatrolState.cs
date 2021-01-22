@@ -6,7 +6,7 @@ public class PatrolState : State
 {
     public override void Enter(EnemyTank enemy)
     {
-        enemy.InitPatrolPoint(enemy.transform.position, enemy.BezierCtrlPt[0].position, enemy.BezierCtrlPt[1].position, enemy.BezierCtrlPt[2].position);
+        enemy.currentTarget  = enemy.transform.position;
     }
     public override void Stay(EnemyTank enemy)
     {

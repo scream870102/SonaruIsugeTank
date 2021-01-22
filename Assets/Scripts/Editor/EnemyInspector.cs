@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(EnemyTank))]
-
+[CanEditMultipleObjects]
 public class EnemyInspector : Editor
 {   
     bool showParts = true;
@@ -17,9 +17,10 @@ public class EnemyInspector : Editor
 
      public override void OnInspectorGUI()
      {
+
         //設定整個介面是以垂直方向來佈局
         EditorGUILayout.BeginVertical();
-
+        
         enemy.property = (TankProperty)EditorGUILayout.ObjectField("Enemy Property", enemy.property, typeof(TankProperty), true);
 
         enemy.currentHealth = EditorGUILayout.IntSlider("Enemy Health", enemy.currentHealth, 0, enemy.property.health);
@@ -60,5 +61,8 @@ public class EnemyInspector : Editor
         
 
         EditorGUILayout.EndVertical();
+
+        if (GUI.changed)
+            EditorUtility.SetDirty(enemy);
      }
 }
