@@ -21,7 +21,11 @@ public class PatrolPointControl : MonoBehaviour
 
     void SetCurve()
     {
-        
+        for(int i = 0; i < segmentNum; i++)
+        {
+            float t = i / (float)segmentNum;
+            Gizmos.DrawSphere(CalBezier(t, StartPt.position, CtrlPt_1.position, CtrlPt_2.position, EndPt.position), 0.01f);
+        }
         for(int j = 0; j < (segmentNum - 1); j++)
         {
             float ct = j / (float)segmentNum;

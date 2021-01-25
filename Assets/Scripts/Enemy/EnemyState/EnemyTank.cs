@@ -32,11 +32,12 @@ public class EnemyTank : MonoBehaviour
 
     public GameObject PatrolCtrlObj;
     public PatrolPointControl s_patrolCtrl;
-    public Transform[] BezierCtrlPt;
     public Queue<Vector3> PatrolQueue;
     public int segmentNum;
     public Vector3 currentTarget;
     private bool forward = true;
+    private float enemyWidth;
+    private Queue<Vector3> fixQueue;
 
     public Dictionary<EnemyState, State> StateDic;
 
@@ -54,7 +55,9 @@ public class EnemyTank : MonoBehaviour
         player = FindObjectOfType<Player>().gameObject;
         enemyRb = GetComponent<Rigidbody2D>();
         PatrolQueue = new Queue<Vector3>();
+        fixQueue = new Queue<Vector3>();
         s_patrolCtrl = PatrolCtrlObj.GetComponent<PatrolPointControl>();
+        enemyWidth = GetComponent<Collider2D>().bounds.size.y;
     }
 
     void Start() 
@@ -68,7 +71,7 @@ public class EnemyTank : MonoBehaviour
     void Update()
     {
         CurrentState.Stay(this);
-        //Debug.Log(CurrentState);
+        //Debug.Log(enemyWidth);
     }
 
     //設定扣血
@@ -108,14 +111,39 @@ public class EnemyTank : MonoBehaviour
     //敵人巡邏模式移動
     public void CurveMove()
     {    
-        if(transform.position!=currentTarget)
+        if(transform.position != currentTarget)
         {
+            
             Vector3 dir = currentTarget - transform.position;
+            Ray2D ray = new Ray2D(transform.position, dir);
+            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Vector3.Distance(transform.position, currentTarget) + 1.414f * enemyWidth, 1<<8);
+            if(fixQueue.Count  != 0)
+            {
+                currentTarget = fixQueue.Dequeue();
+                return;
+            }
+            else
+            {
+                //躲避障礙物
+                if(hit.collider)
+                {
+                    Debug.DrawLine(ray.origin,hit.point, Color.red);
+                    Vector3 v_up = transform.up;
+                    v_up.x = 0;
+                    Vector3 v_rev = transform.position - currentTarget;
+                    v_rev.y = 0;
+                    Vector3 v_fix = v_up + v_rev;
+                    fixQueue.Enqueue(currentTarget + v_fix);
+                    return;
+                }
+            }
+            //取得轉向角度
             dir.z = 0f;
             dir.Normalize();
             float angle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, -angle), property.RotateSpeed * Time.deltaTime);
-            if(transform.rotation == Quaternion.Euler(0, 0, -angle))
+            //角度容許值：±3°
+            if(Quaternion.Angle(transform.rotation, Quaternion.Euler(0, 0, -angle)) <= 3.0f)
             {
                 transform.position = Vector3.MoveTowards(transform.position, currentTarget, property.MoveSpeed * Time.deltaTime);
             }
