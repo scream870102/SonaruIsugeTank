@@ -18,6 +18,7 @@ public class EnemyTank : MonoBehaviour
     //當前狀態
     public State CurrentState;
 
+    public SpriteRenderer EnemySprite;
     public GameObject EnemyHead;
     public Transform EnemyGun;
     public Transform EnemyShootPoint;
@@ -52,6 +53,7 @@ public class EnemyTank : MonoBehaviour
             {EnemyState.Die, new DieState()}
         };     
         currentHealth = property.health;
+        EnemySprite.sprite = property.MiniMapIcon;
         player = FindObjectOfType<Player>().gameObject;
         enemyRb = GetComponent<Rigidbody2D>();
         PatrolQueue = new Queue<Vector3>();
@@ -117,14 +119,14 @@ public class EnemyTank : MonoBehaviour
             Vector3 dir = currentTarget - transform.position;
             Ray2D ray = new Ray2D(transform.position, dir);
             RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Vector3.Distance(transform.position, currentTarget) + 1.414f * enemyWidth, 1<<8);
-            if(fixQueue.Count  != 0)
+            if(fixQueue.Count != 0)
             {
                 currentTarget = fixQueue.Dequeue();
                 return;
             }
             else
             {
-                //躲避障礙物
+                //躲避障礙物(須修正)
                 if(hit.collider)
                 {
                     Debug.DrawLine(ray.origin,hit.point, Color.red);
@@ -222,7 +224,7 @@ public class EnemyTank : MonoBehaviour
         if(PatrolQueue.Count == 0)
         {
             PatrolQueue = new Queue<Vector3>();
-            for(int i = 0; i < segmentNum; i++)
+            for(int i = 1; i <= segmentNum; i++)
             {
                 float t = i / (float)segmentNum;
                 PatrolQueue.Enqueue(CalBezier(t, start, control1, control2, end));

@@ -15,6 +15,7 @@ MonoBehaviour:
   Id: 2
   types: 2
   Name: IS-6
+  MiniMapIcon: {fileID: 21300000, guid: 72afdd4da4bd044418d175d96f9ece4f, type: 3}
   attack: 25
   BulletSpeed: 15
   ReloadTime: 4

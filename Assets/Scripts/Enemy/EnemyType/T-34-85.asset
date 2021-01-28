@@ -15,6 +15,7 @@ MonoBehaviour:
   Id: 1
   types: 1
   Name: T-34-85
+  MiniMapIcon: {fileID: 21300000, guid: c869b9de893e7ba4880349e7b0ff86cc, type: 3}
   attack: 15
   BulletSpeed: 15
   ReloadTime: 2

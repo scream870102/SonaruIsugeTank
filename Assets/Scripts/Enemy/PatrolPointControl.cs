@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PatrolPointControl : MonoBehaviour
 {
+    public float MAX_AVOID_FORCE = 1.1f;
     public Transform StartPt;
     public Transform CtrlPt_1;
     public Transform CtrlPt_2;
@@ -11,8 +12,10 @@ public class PatrolPointControl : MonoBehaviour
 
     public int segmentNum;
 
+    private List<Vector3> pointList;
+    private List<Vector3> fixList;
 
-
+    private Vector3 setPoint;
     void OnDrawGizmos() 
     {
         Gizmos.color = Color.blue;
@@ -21,17 +24,39 @@ public class PatrolPointControl : MonoBehaviour
 
     void SetCurve()
     {
-        for(int i = 0; i < segmentNum; i++)
+        pointList = new List<Vector3>();
+        fixList = new List<Vector3>();
+        //標示點位置
+        for(int i = 1; i <= segmentNum; i++)
         {
             float t = i / (float)segmentNum;
             Gizmos.DrawSphere(CalBezier(t, StartPt.position, CtrlPt_1.position, CtrlPt_2.position, EndPt.position), 0.01f);
+            pointList.Add(CalBezier(t, StartPt.position, CtrlPt_1.position, CtrlPt_2.position, EndPt.position));
         }
-        for(int j = 0; j < (segmentNum - 1); j++)
+        //畫出曲線
+        for(int j = 1; j <= (segmentNum - 1); j++)
         {
-            float ct = j / (float)segmentNum;
-            float nt = ( j + 1.0f ) / (float)segmentNum;
-            Gizmos.DrawLine(CalBezier(ct, StartPt.position, CtrlPt_1.position, CtrlPt_2.position, EndPt.position),
-                            CalBezier(nt, StartPt.position, CtrlPt_1.position, CtrlPt_2.position, EndPt.position));
+            Vector3 cv = pointList[j-1];
+            Vector3 nv = pointList[j];
+            Ray2D ray = new Ray2D(cv, nv-cv);
+            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Vector3.Distance(cv, nv) + 2, 1<<8);
+            if(hit.collider)
+            {
+                Vector3 fixPoint = new Vector3(setPoint.x, cv.y, 0);
+                fixList.Add(fixPoint); 
+                Gizmos.color = Color.red;
+            }
+            else
+            {
+                setPoint = cv;
+                Gizmos.color = Color.blue;
+            }
+            Gizmos.DrawLine(cv, nv);
+        }
+        for(int k = 0; k < fixList.Count - 1; k++)
+        {
+            Gizmos.color = Color.white;
+            Gizmos.DrawLine(fixList[k], fixList[k+1]);
         }
     }
 

@@ -6,8 +6,8 @@ using UnityEditor;
 [CanEditMultipleObjects]
 public class EnemyInspector : Editor
 {   
-    bool showParts = true;
-    bool showPatrolSettings = true;
+    bool showParts = false;
+    bool showPatrolSettings = false;
     EnemyTank enemy;
     void OnEnable()
     {
@@ -49,6 +49,7 @@ public class EnemyInspector : Editor
             enemy.EnemyGun = (Transform)EditorGUILayout.ObjectField("Enemy Gun", enemy.EnemyGun, typeof(Transform), true);
             enemy.EnemyShootPoint = (Transform)EditorGUILayout.ObjectField("Enemy Shoot Point", enemy.EnemyShootPoint, typeof(Transform), true);
             enemy.Bullet = (GameObject)EditorGUILayout.ObjectField("Bullet", enemy.Bullet, typeof(GameObject), true);
+            enemy.EnemySprite = (SpriteRenderer)EditorGUILayout.ObjectField("SpriteRenderer", enemy.EnemySprite, typeof(SpriteRenderer), true);
         }
 
         showPatrolSettings = EditorGUILayout.Foldout(showPatrolSettings, "Patrol Settings");
