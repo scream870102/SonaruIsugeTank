@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.cj-studio.unimo": {
+      "version": "https://github.com/scream870102/UniMO.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "ddb2bd16822e5ed5b04f4b9b0a9f25f515abd536"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
@@ -33,13 +40,6 @@
       "dependencies": {
         "com.unity.test-framework": "1.1.1"
       },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.ide.visualstudio": {
-      "version": "2.0.2",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.vscode": {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Eccentric.Utils;
+using Scream.UniMO;
 using Lean.Pool;
 
 public class Bullet : MonoBehaviour
