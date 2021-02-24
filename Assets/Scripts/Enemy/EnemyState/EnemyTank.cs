@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CircleCal.Math;
-using Eccentric.Utils;
+using Scream.UniMO;
 using Lean.Pool;
 
-public enum EnemyState 
+public enum EnemyState
 {
     Patrol,
     Aware,
@@ -42,16 +42,16 @@ public class EnemyTank : MonoBehaviour
 
     public Dictionary<EnemyState, State> StateDic;
 
-    
+
     void Awake()
-    {   
-        StateDic =new Dictionary<EnemyState, State>()
+    {
+        StateDic = new Dictionary<EnemyState, State>()
         {
             {EnemyState.Patrol, new PatrolState()},
             {EnemyState.Aware, new AwareState()},
             {EnemyState.Attack, new AttackState()},
             {EnemyState.Die, new DieState()}
-        };     
+        };
         currentHealth = property.health;
         EnemySprite.sprite = property.MiniMapIcon;
         player = FindObjectOfType<Player>().gameObject;
@@ -62,7 +62,7 @@ public class EnemyTank : MonoBehaviour
         enemyWidth = GetComponent<Collider2D>().bounds.size.y;
     }
 
-    void Start() 
+    void Start()
     {
         CurrentState = StateDic[EnemyState.Patrol];
         CurrentState.Enter(this);
@@ -87,10 +87,10 @@ public class EnemyTank : MonoBehaviour
 
     //偵錯用(畫圓)
     void OnDrawGizmos()
-	{
-		DrawCircle(EnemyHead.transform.position, property.AttackRange, Color.red);  //攻擊圈(紅)
+    {
+        DrawCircle(EnemyHead.transform.position, property.AttackRange, Color.red);  //攻擊圈(紅)
         DrawCircle(EnemyHead.transform.position, property.ViewRange, Color.green);  //偵查圈(綠)
-	}
+    }
 
     //改變狀態
     public void ChangeState(EnemyState newState)
@@ -103,7 +103,7 @@ public class EnemyTank : MonoBehaviour
     //計算與玩家間的距離
     public float DistanceToPalyer()
     {
-        if(player != null)
+        if (player != null)
         {
             return Vector2.Distance(player.transform.position, EnemyHead.transform.position);
         }
@@ -112,14 +112,14 @@ public class EnemyTank : MonoBehaviour
 
     //敵人巡邏模式移動
     public void CurveMove()
-    {    
-        if(transform.position != currentTarget)
+    {
+        if (transform.position != currentTarget)
         {
-            
+
             Vector3 dir = currentTarget - transform.position;
             Ray2D ray = new Ray2D(transform.position, dir);
-            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Vector3.Distance(transform.position, currentTarget) + 1.414f * enemyWidth, 1<<8);
-            if(fixQueue.Count != 0)
+            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Vector3.Distance(transform.position, currentTarget) + 1.414f * enemyWidth, 1 << 8);
+            if (fixQueue.Count != 0)
             {
                 currentTarget = fixQueue.Dequeue();
                 return;
@@ -127,9 +127,9 @@ public class EnemyTank : MonoBehaviour
             else
             {
                 //躲避障礙物(須修正)
-                if(hit.collider)
+                if (hit.collider)
                 {
-                    Debug.DrawLine(ray.origin,hit.point, Color.red);
+                    Debug.DrawLine(ray.origin, hit.point, Color.red);
                     Vector3 v_up = transform.up;
                     v_up.x = 0;
                     Vector3 v_rev = transform.position - currentTarget;
@@ -145,17 +145,17 @@ public class EnemyTank : MonoBehaviour
             float angle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, -angle), property.RotateSpeed * Time.deltaTime);
             //角度容許值：±3°
-            if(Quaternion.Angle(transform.rotation, Quaternion.Euler(0, 0, -angle)) <= 3.0f)
+            if (Quaternion.Angle(transform.rotation, Quaternion.Euler(0, 0, -angle)) <= 3.0f)
             {
                 transform.position = Vector3.MoveTowards(transform.position, currentTarget, property.MoveSpeed * Time.deltaTime);
             }
         }
         else
         {
-            if(PatrolQueue.Count == 0)
+            if (PatrolQueue.Count == 0)
             {
                 //Find New Curve
-                if(forward)
+                if (forward)
                 {
                     InitPatrolPoint(transform.position, s_patrolCtrl.CtrlPt_1.position, s_patrolCtrl.CtrlPt_2.position, s_patrolCtrl.EndPt.position);
                     forward = !forward;
@@ -172,7 +172,7 @@ public class EnemyTank : MonoBehaviour
     //敵人瞄準目標
     public void LookTarget(GameObject target)
     {
-        if(target != null)
+        if (target != null)
         {
             Vector3 targetPos = target.transform.position;
             Vector3 direction = targetPos - EnemyHead.transform.position;
@@ -196,7 +196,7 @@ public class EnemyTank : MonoBehaviour
                 EnemyBulletShoot(Bullet, property.BulletSpeed);
                 reloadTimer.Reset();
             }
-            Debug.DrawLine(ray.origin,hit.point, Color.red );
+            Debug.DrawLine(ray.origin, hit.point, Color.red);
         }
     }
 
@@ -221,10 +221,10 @@ public class EnemyTank : MonoBehaviour
     //生成巡邏點
     public void InitPatrolPoint(Vector3 start, Vector3 control1, Vector3 control2, Vector3 end)
     {
-        if(PatrolQueue.Count == 0)
+        if (PatrolQueue.Count == 0)
         {
             PatrolQueue = new Queue<Vector3>();
-            for(int i = 1; i <= segmentNum; i++)
+            for (int i = 1; i <= segmentNum; i++)
             {
                 float t = i / (float)segmentNum;
                 PatrolQueue.Enqueue(CalBezier(t, start, control1, control2, end));
@@ -251,9 +251,9 @@ public class EnemyTank : MonoBehaviour
         Vector2 prev = circle.Eval(0);
 
         //Color tempColor = Gizmos.color;
-		Gizmos.color = _color;
+        Gizmos.color = _color;
 
-        for(int i = 0; i <= count; i++)
+        for (int i = 0; i <= count; i++)
         {
             Vector3 curr = circle.Eval(i * delta);
             Gizmos.DrawLine(prev, curr);
