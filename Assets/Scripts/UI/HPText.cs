@@ -6,37 +6,27 @@ using UnityEngine.UI;
 public class HPText : MonoBehaviour
 {
     public Text HpText;
-    public GameObject player;
 
-    void OnEnable() 
+    void OnEnable()
     {
         Player.PlayerHpChange += UpdateHpText;
     }
 
-    void OnDisable() 
+    void OnDisable()
     {
-        Player.PlayerHpChange -= UpdateHpText;    
+        Player.PlayerHpChange -= UpdateHpText;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        HpText.text = player.GetComponent<Player>().property.health.ToString();
-    }
 
     public void UpdateHpText(int currentHealth)
     {
-        if(player != null)
+        if (currentHealth <= 0)
         {
-            currentHealth = player.GetComponent<Player>().currentHealth;
-            if(currentHealth <= 0)
-            {
-                HpText.text = "0";
-            }
-            else
-            {
-                HpText.text = currentHealth.ToString();
-            }
+            HpText.text = "0";
+        }
+        else
+        {
+            HpText.text = currentHealth.ToString();
         }
     }
 }
