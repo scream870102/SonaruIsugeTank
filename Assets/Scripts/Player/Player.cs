@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Lean.Pool;
+using System;
 
 public class Player : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class Player : MonoBehaviour
     protected float CountTime = 0;
     public int Team = 1;
     public int currentHealth;
+
+    public static event Action<int> PlayerHpChange;
 
     // public Player(GameObject _head, Transform _gun, Transform _point, TankProperty _property, GameObject _bullet)
     // {
@@ -38,12 +41,13 @@ public class Player : MonoBehaviour
         DestoryTank();
     }
 
-
+    //血量控制
     void OnCollisionEnter2D(Collision2D bul)
     {
         if (bul.gameObject.tag == "Bullet" && Team != bul.gameObject.GetComponent<Bullet>().Team)
         {
             currentHealth -= bul.gameObject.GetComponent<Bullet>().attack;
+            if(PlayerHpChange != null) PlayerHpChange(currentHealth);
         }
     }
 

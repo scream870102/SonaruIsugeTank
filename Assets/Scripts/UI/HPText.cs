@@ -7,16 +7,24 @@ public class HPText : MonoBehaviour
 {
     public Text HpText;
     public GameObject player;
-    private int currentHealth;
+
+    void OnEnable() 
+    {
+        Player.PlayerHpChange += UpdateHpText;
+    }
+
+    void OnDisable() 
+    {
+        Player.PlayerHpChange -= UpdateHpText;    
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        currentHealth = player.GetComponent<Player>().currentHealth;
-        HpText.text = currentHealth.ToString();
+        HpText.text = player.GetComponent<Player>().property.health.ToString();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void UpdateHpText(int currentHealth)
     {
         if(player != null)
         {
@@ -30,6 +38,5 @@ public class HPText : MonoBehaviour
                 HpText.text = currentHealth.ToString();
             }
         }
-        
     }
 }
