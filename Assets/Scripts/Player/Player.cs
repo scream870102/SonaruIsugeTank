@@ -28,9 +28,13 @@ public class Player : MonoBehaviour
     //     Bullet = _bullet;
     // }
 
-    void Start()
+    void Start() => InitPlayerHealth();
+
+    void InitPlayerHealth()
     {
         currentHealth = property.health;
+        if (PlayerHpChange != null)
+            PlayerHpChange(currentHealth);
     }
 
     void FixedUpdate()
@@ -47,7 +51,7 @@ public class Player : MonoBehaviour
         if (bul.gameObject.tag == "Bullet" && Team != bul.gameObject.GetComponent<Bullet>().Team)
         {
             currentHealth -= bul.gameObject.GetComponent<Bullet>().attack;
-            if(PlayerHpChange != null) PlayerHpChange(currentHealth);
+            if (PlayerHpChange != null) PlayerHpChange(currentHealth);
         }
     }
 
@@ -85,7 +89,7 @@ public class Player : MonoBehaviour
         CountTime += Time.deltaTime;
         if (Input.GetMouseButton(0))
         {
-            if(CountTime >= property.ReloadTime)
+            if (CountTime >= property.ReloadTime)
             {
                 InitBullet();
                 CountTime = 0;
@@ -99,13 +103,13 @@ public class Player : MonoBehaviour
         BulletClone = LeanPool.Spawn(Bullet, pos, rot);
         BulletClone.GetComponent<SpriteRenderer>().color = new Color(0.17f, 0.7f, 0.32f);
         BulletClone.GetComponent<Rigidbody2D>().velocity = Gun.up * property.BulletSpeed;//給予砲彈初速
-        BulletClone.GetComponent<Bullet>().attack = property.attack;        
+        BulletClone.GetComponent<Bullet>().attack = property.attack;
         BulletClone.GetComponent<Bullet>().Team = Team;
     }
 
     void DestoryTank()
     {
-        if(currentHealth <= 0) 
+        if (currentHealth <= 0)
         {
             Destroy(this.gameObject);
         }
