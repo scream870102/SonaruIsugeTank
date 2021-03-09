@@ -6,8 +6,6 @@ using UnityEngine.UI;
 public class HPbar : MonoBehaviour
 {
     public Image HpBarImg;
-    [SerializeField] Player player;
-    private float playerHealth;
     private float HPpercent;
 
     void OnEnable()
@@ -23,15 +21,14 @@ public class HPbar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerHealth = player.property.health;
-        HPpercent = 1.0f;
-        HpBarImg.color = Color.Lerp(Color.red, Color.green, HPpercent);
-
+        // playerHealth = player.property.health;
+        // HPpercent = 1.0f;
+        // HpBarImg.color = Color.Lerp(Color.red, Color.green, HPpercent);
     }
 
-    public void UpdateHpBar(int currentHealth)
+    public void UpdateHpBar(Player sender, int currentHealth)
     {
-        HPpercent = currentHealth / playerHealth;
+        HPpercent = currentHealth / (float)sender.property.health;
         HpBarImg.fillAmount = Mathf.Lerp(0.25f, 1, HPpercent);
         HpBarImg.color = Color.Lerp(Color.red, Color.green, HPpercent);
     }

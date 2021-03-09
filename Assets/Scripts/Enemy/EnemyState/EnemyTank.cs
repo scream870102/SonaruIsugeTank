@@ -4,6 +4,7 @@ using UnityEngine;
 using CircleCal.Math;
 using Scream.UniMO;
 using Lean.Pool;
+using System;
 
 public enum EnemyState
 {
@@ -41,6 +42,8 @@ public class EnemyTank : MonoBehaviour
     private Queue<Vector3> fixQueue;
 
     public Dictionary<EnemyState, State> StateDic;
+
+    public static event Action<EnemyTank, int> EnemyHpChange;
 
 
     void Awake()
@@ -82,6 +85,8 @@ public class EnemyTank : MonoBehaviour
         if (bul.gameObject.tag == "Bullet" && Team != bul.gameObject.GetComponent<Bullet>().Team)
         {
             currentHealth -= bul.gameObject.GetComponent<Bullet>().attack;
+
+            if(EnemyHpChange != null) EnemyHpChange(this, currentHealth);
         }
     }
 

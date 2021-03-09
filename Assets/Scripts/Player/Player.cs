@@ -17,16 +17,7 @@ public class Player : MonoBehaviour
     public int Team = 1;
     public int currentHealth;
 
-    public static event Action<int> PlayerHpChange;
-
-    // public Player(GameObject _head, Transform _gun, Transform _point, TankProperty _property, GameObject _bullet)
-    // {
-    //     Head = _head;
-    //     Gun = _gun;
-    //     ShootPoint = _point;
-    //     property = _property;
-    //     Bullet = _bullet;
-    // }
+    public static event Action<Player, int> PlayerHpChange;
 
     void Start() => InitPlayerHealth();
 
@@ -34,7 +25,7 @@ public class Player : MonoBehaviour
     {
         currentHealth = property.health;
         if (PlayerHpChange != null)
-            PlayerHpChange(currentHealth);
+            PlayerHpChange(this, currentHealth);
     }
 
     void FixedUpdate()
@@ -51,7 +42,7 @@ public class Player : MonoBehaviour
         if (bul.gameObject.tag == "Bullet" && Team != bul.gameObject.GetComponent<Bullet>().Team)
         {
             currentHealth -= bul.gameObject.GetComponent<Bullet>().attack;
-            if (PlayerHpChange != null) PlayerHpChange(currentHealth);
+            if (PlayerHpChange != null) PlayerHpChange(this, currentHealth);
         }
     }
 
