@@ -11,7 +11,6 @@ public class Bullet : MonoBehaviour
     private ScaledTimer bulletDestroyTImer;
     public int attack;
     public int Team;
-    public GameObject bar;
 
     void OnEnable() 
     {
@@ -20,7 +19,6 @@ public class Bullet : MonoBehaviour
 
     void Awake()
     {
-        bar = FindObjectOfType<EnemyHpBar>().gameObject;
         bulletDestroyTImer = new ScaledTimer(time);   
     }
     
@@ -35,7 +33,6 @@ public class Bullet : MonoBehaviour
     }
     void OnCollisionEnter2D(Collision2D col)
     {
-        bar.GetComponent<EnemyHpBar>().Enemy = Get_Enemy_GameObject(col);
         if(col.gameObject.tag != null)
         {
             LeanPool.Despawn(gameObject);

@@ -18,7 +18,7 @@ public class HPText : MonoBehaviour
     }
 
 
-    public void UpdateHpText(int currentHealth)
+    public void UpdateHpText(Player sender, int currentHealth)
     {
         if (currentHealth <= 0)
         {

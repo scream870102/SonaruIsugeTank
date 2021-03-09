@@ -2,44 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Scream.UniMO;
 
 public class EnemyHpBar : MonoBehaviour
 {
     public Image EnemyHpImg;
-    public GameObject Enemy;
-    public string EnemyName;
-    private float currentHealth;
-    private float health;
     private float healthPercent;
     private bool ImgAlpha = false;
     private float countTime = 5f;
+    private ScaledTimer showBarTime;
+
+    void OnEnable()
+    {
+        EnemyTank.EnemyHpChange += UpdateEnemyHpBar;
+    }
+
+    void OnDisable()
+    {
+        EnemyTank.EnemyHpChange -= UpdateEnemyHpBar;
+    }
+
     void Start(){
-        Enemy = null;
         SetHpBarAlpha(ImgAlpha);
+        showBarTime = new ScaledTimer(countTime, false);
     }
 
     // Update is called once per frame
     void Update()
     {   
         SetHpBarAlpha(ImgAlpha);
-        if(Enemy != null)
+        if(showBarTime.IsFinished)
         {
-            countTime = 5f;
-            ImgAlpha = true;
-            currentHealth = Enemy.GetComponent<EnemyTank>().currentHealth;
-            health = Enemy.GetComponent<EnemyTank>().property.health;
-            healthPercent = currentHealth / health;
-            EnemyHpImg.fillAmount = healthPercent;
-            EnemyName = Enemy.GetComponent<EnemyTank>().property.Name;
-            Enemy = null;
-        }
-        else 
-        {
-            countTime -= Time.deltaTime;
-            if(countTime <= 0f)
-            {
-                ImgAlpha = false;
-            }
+            ImgAlpha = false;
+            showBarTime.Reset();
         }
     }
 
@@ -50,5 +45,13 @@ public class EnemyHpBar : MonoBehaviour
             EnemyHpImg.GetComponentInParent<CanvasGroup>().alpha = 1;    
         }
         else EnemyHpImg.GetComponentInParent<CanvasGroup>().alpha = 0;
+    }
+
+    void UpdateEnemyHpBar(EnemyTank sender, int currentHealth)
+    {
+        showBarTime.Reset();
+        ImgAlpha = true;
+        healthPercent = currentHealth / (float)sender.property.health;
+        EnemyHpImg.fillAmount = healthPercent;
     }
 }

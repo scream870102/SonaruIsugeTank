@@ -29,7 +29,7 @@ public class HPbar : MonoBehaviour
 
     }
 
-    public void UpdateHpBar(int currentHealth)
+    public void UpdateHpBar(Player sender, int currentHealth)
     {
         HPpercent = currentHealth / playerHealth;
         HpBarImg.fillAmount = Mathf.Lerp(0.25f, 1, HPpercent);
